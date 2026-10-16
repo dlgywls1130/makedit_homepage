@@ -29,8 +29,8 @@
 
 | 페이지 | 방식 | 갱신 |
 | --- | --- | --- |
-| `/`, `/work`, `/privacy` | 빌드 시 정적 생성 (○) | Sanity webhook → `revalidateTag` |
-| `/work/[slug]` | 공개 slug는 빌드 시 생성 (●), 이후 추가된 slug는 첫 요청 시 생성 후 캐시 | 동일 |
+| `/`, `/work`, `/privacy` | 빌드 시 정적 생성 (○) | Cloudflare: Sanity webhook → Deploy Hook 재빌드 / Vercel: `revalidateTag` |
+| `/work/[slug]` | 공개 slug는 모두 빌드 시 생성 (●) | 동일 |
 | `/api/*` | 요청 시 실행 (ƒ) | — |
 
 - 모든 페이지에 SSR을 쓰지 않습니다. 방문자는 항상 캐시된 HTML을 받고, 콘텐츠가 바뀔 때만 다시 생성됩니다.
@@ -75,7 +75,9 @@
 | Worker 크기 제한 | — | Free 3 MiB / Paid 10 MiB (gzip) | — |
 | 운영 난이도 | 가장 낮음 | 중간 (wrangler·바인딩 설정) | 낮지만 기능 제한 |
 
-**권장**: 월 비용을 최소화하려면 **Cloudflare Workers + OpenNext**를 쓰고, 번들이 3 MiB를 넘으면 Workers Paid($5)로 올립니다. 설정 부담을 최소화하려면 **Vercel Pro**가 맞습니다. 코드는 두 환경 모두에 맞춰 작성했습니다(이미지 최적화는 Sanity CDN을 써서 호스트 쪽 이미지 변환 비용이 들지 않음). Cloudflare가 추천하는 `vinext`는 아직 실험 단계라 이번에는 제외했습니다.
+**결정 (2026-10-16)**: Cloudflare Workers Free + OpenNext로 시작합니다. 측정한 Worker 크기는 gzip 2.41 MiB(한도 3 MiB)이고, 상세 내용은 [DEPLOY.md](DEPLOY.md)에 있습니다.
+
+**참고 (비교 당시 권장)**: 월 비용을 최소화하려면 **Cloudflare Workers + OpenNext**를 쓰고, 번들이 3 MiB를 넘으면 Workers Paid($5)로 올립니다. 설정 부담을 최소화하려면 **Vercel Pro**가 맞습니다. 코드는 두 환경 모두에 맞춰 작성했습니다(이미지 최적화는 Sanity CDN을 써서 호스트 쪽 이미지 변환 비용이 들지 않음). Cloudflare가 추천하는 `vinext`는 아직 실험 단계라 이번에는 제외했습니다.
 
 ## 6. 운영 비용 (예상)
 

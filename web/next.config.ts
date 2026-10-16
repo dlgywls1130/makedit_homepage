@@ -1,3 +1,4 @@
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import type { NextConfig } from "next";
 
 // Studio origin allowed to embed the site in an iframe (Sanity Presentation tool preview).
@@ -43,3 +44,6 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Exposes Cloudflare bindings to `next dev` (no effect on production builds).
+initOpenNextCloudflareForDev();
