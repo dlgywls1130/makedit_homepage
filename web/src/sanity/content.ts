@@ -2,9 +2,9 @@ import "server-only";
 
 import { cache } from "react";
 import { sanityFetch } from "./fetch";
+import { demoMode, demoProjects } from "./demo";
 import {
   allProjectsQuery,
-  homeProjectsQuery,
   projectDetailQuery,
   projectSlugsQuery,
   siteSettingsQuery,
@@ -22,20 +22,13 @@ const emptySettings: SiteSettings = {
   privacyOfficer: null,
 };
 
-export async function getHomeProjects() {
-  const data = await sanityFetch<{ featured: ProjectCard[]; latest: ProjectCard[]; total: number }>({
-    query: homeProjectsQuery,
-    fallback: { featured: [], latest: [], total: 0 },
-  });
-  // Featured projects lead; fall back to the newest ones when nothing is marked featured.
-  return { projects: data.featured.length ? data.featured : data.latest, total: data.total };
-}
-
-export function getAllProjects() {
+export function getAllProjects(): Promise<ProjectCard[]> {
+  if (demoMode) return Promise.resolve(demoProjects);
   return sanityFetch<ProjectCard[]>({ query: allProjectsQuery, fallback: [] });
 }
 
-export function getProjectSlugs() {
+export function getProjectSlugs(): Promise<string[]> {
+  if (demoMode) return Promise.resolve(demoProjects.map((p) => p.slug));
   return sanityFetch<string[]>({ query: projectSlugsQuery, fallback: [], allowDraft: false });
 }
 
@@ -49,7 +42,9 @@ export function getSitemapProjects() {
 
 /** Deduplicated per request: generateMetadata and the page share one fetch. */
 export const getProject = cache(async (slug: string) => {
-  const data = await sanityFetch<{ project: ProjectDetail | null; all: ProjectLink[] }>({
+  const data = demoMode
+    ? { project: demoProjects.find((p) => p.slug === slug) ?? null, all: demoProjects }
+    : await sanityFetch<{ project: ProjectDetail | null; all: ProjectLink[] }>({
     query: projectDetailQuery,
     params: { slug },
     fallback: { project: null, all: [] },

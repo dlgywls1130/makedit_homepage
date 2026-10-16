@@ -6,7 +6,7 @@ import { client } from "./client";
 import { studioUrl } from "./env";
 
 /** Cache tags. The Sanity webhook revalidates these by document `_type`. */
-export const CONTENT_TAGS = ["project", "category", "service", "siteSettings"] as const;
+export const CONTENT_TAGS = ["project", "service", "siteSettings"] as const;
 
 const readToken = process.env.SANITY_API_READ_TOKEN;
 

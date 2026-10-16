@@ -19,7 +19,6 @@ export const structure: StructureResolver = (S) =>
         .title("비공개 프로젝트")
         .child(S.documentList().title("비공개").filter('_type == "project" && status != "public"')),
       S.divider(),
-      S.documentTypeListItem("category").title("카테고리"),
       S.documentTypeListItem("service").title("담당 업무"),
       S.divider(),
       S.listItem()

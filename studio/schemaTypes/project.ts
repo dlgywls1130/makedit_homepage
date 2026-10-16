@@ -2,6 +2,8 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 const thisYear = new Date().getFullYear();
 
+const CATEGORY_LABELS: Record<string, string> = { homepage: "홈페이지", corporate: "회사·기업", ecommerce: "쇼핑몰", app: "앱" };
+
 export const project = defineType({
   name: "project",
   title: "프로젝트",
@@ -49,9 +51,20 @@ export const project = defineType({
     defineField({
       name: "category",
       title: "카테고리",
-      type: "reference",
-      to: [{ type: "category" }],
+      type: "string",
       group: "overview",
+      description: "사이트 Works 필터 탭(홈페이지 · 회사·기업 · 쇼핑몰 · 앱)에 사용됩니다.",
+      // Keep in sync with web/src/lib/categories.ts
+      options: {
+        layout: "radio",
+        direction: "horizontal",
+        list: [
+          { title: "홈페이지", value: "homepage" },
+          { title: "회사·기업", value: "corporate" },
+          { title: "쇼핑몰", value: "ecommerce" },
+          { title: "앱", value: "app" },
+        ],
+      },
       validation: (r) => r.required(),
     }),
     defineField({
@@ -185,7 +198,14 @@ export const project = defineType({
         "비공개는 사이트 목록·상세에서 숨깁니다. 단, Free 플랜의 공개 데이터셋에서는 발행된 문서가 API로 조회될 수 있으므로, 민감한 프로젝트는 '발행 취소(Unpublish)'로 초안 상태로 되돌리세요.",
       validation: (r) => r.required(),
     }),
-    defineField({ name: "featured", title: "메인 페이지 노출", type: "boolean", group: "settings", initialValue: false }),
+    defineField({
+      name: "featured",
+      title: "상단 고정",
+      type: "boolean",
+      group: "settings",
+      description: "켜면 Works 목록 맨 앞에 표시됩니다(홈은 최대 6개).",
+      initialValue: false,
+    }),
     defineField({
       name: "sortOrder",
       title: "정렬 순서",
@@ -208,10 +228,10 @@ export const project = defineType({
     { title: "연도 최신순", name: "yearDesc", by: [{ field: "year", direction: "desc" }] },
   ],
   preview: {
-    select: { title: "title", year: "year", category: "category.title", status: "status", featured: "featured", media: "thumbnail" },
+    select: { title: "title", year: "year", category: "category", status: "status", featured: "featured", media: "thumbnail" },
     prepare: ({ title, year, category, status, featured, media }) => ({
       title: `${featured ? "★ " : ""}${title ?? "(제목 없음)"}`,
-      subtitle: [status === "public" ? "공개" : "비공개", category, year].filter(Boolean).join(" · "),
+      subtitle: [status === "public" ? "공개" : "비공개", CATEGORY_LABELS[category as string], year].filter(Boolean).join(" · "),
       media,
     }),
   },

@@ -1,28 +1,7 @@
-// Illustrative UI mockups from the design, shown only while the CMS has no public projects.
-// They are decorative (aria-hidden) and every card is labelled "Sample".
+// Illustrative UI mockups from the design. Used only by local demo data (sanity/demo.ts);
+// they are decorative (aria-hidden) and the cards show a "Sample" label.
 
 export type SampleVisual = "workspace" | "commerce" | "control";
-
-export const sampleProjects: { title: string; category: string; overview: string; visual: SampleVisual }[] = [
-  {
-    title: "Operations Workspace",
-    category: "Enterprise System",
-    overview: "복잡한 업무 흐름과 데이터를 하나의 명확한 인터페이스로 연결하는 운영 시스템 콘셉트.",
-    visual: "workspace",
-  },
-  {
-    title: "Commerce Reframed",
-    category: "E-commerce",
-    overview: "상품 탐색부터 구매까지 불필요한 단계를 덜어낸 스토어프런트 경험.",
-    visual: "commerce",
-  },
-  {
-    title: "Service Control",
-    category: "Web Application",
-    overview: "실시간 상태와 핵심 지표를 빠르게 파악할 수 있는 서비스 관리 도구.",
-    visual: "control",
-  },
-];
 
 const base = "size-full transition-transform duration-600 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-[1.025]";
 

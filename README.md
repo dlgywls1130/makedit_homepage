@@ -33,10 +33,10 @@ Sanity를 연결하지 않아도 사이트는 동작합니다. 이 경우 프로
 6. manage → **API → Webhooks**에 webhook을 추가합니다.
    - URL: `https://makedit.co.kr/api/revalidate`
    - Dataset: `production` · Trigger: Create / Update / Delete
-   - Filter: `_type in ["project","category","service","siteSettings"]`
+   - Filter: `_type in ["project","service","siteSettings"]`
    - Projection: `{_type}`
    - Secret: 임의의 긴 문자열. `SANITY_REVALIDATE_SECRET`과 같은 값을 씁니다.
-7. Studio에서 **사이트 설정**에 실제 사업자 정보를 입력하고, 카테고리·담당 업무·프로젝트를 등록합니다.
+7. Studio에서 **사이트 설정**에 실제 사업자 정보를 입력하고, 담당 업무·프로젝트를 등록합니다. 프로젝트 카테고리는 고정 4종(홈페이지·회사·기업·쇼핑몰·앱)에서 고릅니다.
 
 ## 문의 폼
 

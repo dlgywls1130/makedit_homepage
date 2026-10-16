@@ -54,11 +54,14 @@
 - `project`: 요구사항의 모든 필드 + 상세 콘텐츠(배경 / 해결 과제 / 수행 내용 / 구현 결과 / 본문 / 갤러리 / 외부 링크). 필드는 5개 탭(기본 정보 · 상세 내용 · 이미지 · SEO · 노출 설정)으로 묶었습니다.
   - 명세의 `status`(초안·공개)는 `status`(공개·비공개)로 구현했습니다. 초안은 Sanity의 기본 Draft/Published 기능이 맡습니다.
   - 명세의 `services`(담당 업무)는 재사용할 수 있는 `service` 문서를 참조합니다.
-- `category`, `service`: 재사용하는 분류 문서
+- `category`: 고정 선택지 4종(`homepage` 홈페이지 · `corporate` 회사·기업 · `ecommerce` 쇼핑몰 · `app` 앱). Works 필터 탭과 1:1로 대응하며, 값 목록은 `web/src/lib/categories.ts`와 `studio/schemaTypes/project.ts` 두 곳에 있습니다.
+- `service`: 재사용하는 담당 업무 문서
 - `siteSettings`(싱글톤): 상호·대표자·사업자번호·주소·이메일·전화·개인정보 보호책임자. 비워 두면 푸터에 "등록 예정", 개인정보처리방침에 "[확인 필요]"로 표시됩니다.
 - `imageWithAlt`: 대체 텍스트(필수)·캡션·핫스팟
 - slug: 같은 타입 안에서 중복을 막고(Sanity 기본 기능), 형식을 검증합니다(영문 소문자·숫자·하이픈).
-- 정렬: `sortOrder` 오름차순 → 연도 최신순 → 생성일 최신순
+- 정렬: 상단 고정(`featured`) → `sortOrder` 오름차순 → 연도 최신순 → 생성일 최신순
+- Works 필터는 브라우저에서 동작하고 선택 상태는 `?type=` 쿼리로 유지됩니다(페이지는 정적 생성 유지).
+- Sanity 미연결 + 개발 서버에서만 `web/src/sanity/demo.ts` 샘플 데이터를 표시합니다(프로덕션 빌드에서는 사용 안 함).
 
 ## 5. 배포 옵션 비교
 

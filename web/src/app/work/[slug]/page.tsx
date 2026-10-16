@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Arrow, ButtonLink, cn, eyebrowClass, gutter } from "@/components/ui/primitives";
 import { SanityImage } from "@/components/ui/sanity-image";
+import { ProjectMedia } from "@/components/work/project-card";
+import { categoryLabel } from "@/lib/categories";
 import { RichText } from "@/components/work/rich-text";
 import { getProject, getProjectSlugs } from "@/sanity/content";
 import { imageUrl } from "@/sanity/image";
@@ -54,7 +56,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
 
   const meta: [string, React.ReactNode][] = [
     ...(project.client ? ([["Client", project.client]] as [string, string][]) : []),
-    ["Category", project.category?.title ?? "—"],
+    ["Category", categoryLabel(project.category) ?? "—"],
     ["Year", project.year ?? "—"],
     ["Services", project.services?.length ? project.services.join(", ") : "—"],
   ];
@@ -67,7 +69,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
         </Link>
         <div className="mt-12 grid gap-12 desk:grid-cols-[1fr_3fr]">
           <p className={cn(eyebrowClass, "text-muted-dark")}>
-            {[project.category?.title, project.year].filter(Boolean).join(" / ") || "Project"}
+            {[categoryLabel(project.category), project.year].filter(Boolean).join(" / ") || "Project"}
           </p>
           <div>
             <h1 className="text-[clamp(2.2rem,10.5vw,4rem)] leading-[0.88] font-extrabold tracking-[-0.075em] sm:text-section">
@@ -115,12 +117,13 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
       </header>
 
       <div className={cn("bg-ink pb-16 sm:pb-24", gutter)}>
-        <SanityImage
+        <ProjectMedia
           image={project.thumbnail}
+          sample={project.sample}
+          title={project.title}
           aspect={16 / 9}
           sizes="100vw"
           preload
-          fallbackAlt={`${project.title} 대표 이미지`}
         />
       </div>
 

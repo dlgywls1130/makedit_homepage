@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from "next-sanity";
+import type { SampleVisual } from "@/components/work/sample-mockups";
 
 // Shapes returned by the GROQ projections in ./queries.ts.
 // Keep these in sync with studio/schemaTypes.
@@ -19,17 +20,18 @@ export type SanityImage = {
   };
 };
 
-export type Category = { title: string; slug: string };
-
 export type ProjectCard = {
   _id: string;
   title: string;
   slug: string;
   excerpt: string | null;
   year: number | null;
-  category: Category | null;
+  /** One of lib/categories.ts values. */
+  category: string | null;
   services: string[] | null;
   thumbnail: SanityImage | null;
+  /** Local demo data only: decorative mockup shown instead of a thumbnail. */
+  sample?: SampleVisual;
 };
 
 export type ProjectDetail = ProjectCard & {

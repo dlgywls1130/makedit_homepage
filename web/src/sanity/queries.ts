@@ -6,7 +6,7 @@ import { defineQuery } from "next-sanity";
  * Unpublished drafts never reach the "published" perspective at all.
  */
 const VISIBLE = `_type == "project" && status == "public" && defined(slug.current)`;
-const ORDER = `order(coalesce(sortOrder, 1000) asc, year desc, _createdAt desc)`;
+const ORDER = `order(featured desc, coalesce(sortOrder, 1000) asc, year desc, _createdAt desc)`;
 
 const IMAGE = `{ _key, alt, caption, crop, hotspot, asset->{ _id, url, metadata { lqip, dimensions } } }`;
 
@@ -16,16 +16,10 @@ const CARD = `
   "slug": slug.current,
   excerpt,
   year,
-  "category": category->{ title, "slug": slug.current },
+  category,
   "services": services[]->title,
   thumbnail ${IMAGE}
 `;
-
-export const homeProjectsQuery = defineQuery(`{
-  "featured": *[${VISIBLE} && featured == true] | ${ORDER} [0...6] { ${CARD} },
-  "latest": *[${VISIBLE}] | ${ORDER} [0...6] { ${CARD} },
-  "total": count(*[${VISIBLE}])
-}`);
 
 export const allProjectsQuery = defineQuery(`*[${VISIBLE}] | ${ORDER} { ${CARD} }`);
 
