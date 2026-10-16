@@ -5,10 +5,10 @@ import { structureTool } from "sanity/structure";
 import { schemaTypes } from "./schemaTypes";
 import { structure } from "./structure";
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "hyet2w9s";
 const dataset = process.env.SANITY_STUDIO_DATASET || "production";
 // The Next.js site used for draft previews (Presentation tool).
-const previewOrigin = process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
+const previewOrigin = process.env.SANITY_STUDIO_PREVIEW_URL || "https://makedit.co.kr";
 
 const SINGLETONS = new Set(["siteSettings"]);
 
