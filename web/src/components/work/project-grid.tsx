@@ -1,29 +1,44 @@
 import type { ProjectCard as ProjectCardType } from "@/sanity/types";
-import { ProjectCard } from "./project-card";
+import { CardShell, ProjectCard, cardVariants } from "./project-card";
+import { SampleMockup, sampleProjects } from "./sample-mockups";
 
-// Repeating asymmetric rhythm: wide → narrow (offset down) → centered medium.
-const layout = [
-  { className: "md:col-span-7", aspect: 4 / 3, sizes: "(min-width: 768px) 58vw, 100vw" },
-  { className: "md:col-span-5 md:mt-32", aspect: 4 / 5, sizes: "(min-width: 768px) 42vw, 100vw" },
-  { className: "md:col-span-8 md:col-start-3", aspect: 16 / 9, sizes: "(min-width: 768px) 66vw, 100vw" },
-] as const;
+const grid = "mb-20 grid gap-y-20 sm:grid-cols-[1.5fr_1fr] sm:gap-x-4 desk:gap-x-8 desk:gap-y-28";
 
 export function ProjectGrid({ projects }: { projects: ProjectCardType[] }) {
   return (
-    <div className="grid gap-x-6 gap-y-16 md:grid-cols-12 md:gap-y-28">
-      {projects.map((p, i) => {
-        const l = layout[i % layout.length];
-        return <ProjectCard key={p._id} project={p} aspect={l.aspect} sizes={l.sizes} className={l.className} />;
-      })}
+    <div className={grid}>
+      {projects.map((p, i) => (
+        <ProjectCard key={p._id} project={p} index={i} />
+      ))}
     </div>
   );
 }
 
-export function EmptyProjects() {
+/** Shown while no project is public yet: the design's sample mockups, clearly labelled. */
+export function SampleProjectGrid() {
   return (
-    <div className="border-b border-line py-16 text-center">
-      <p className="font-display text-2xl font-bold tracking-tight">공개된 프로젝트를 준비하고 있습니다.</p>
-      <p className="mt-2 text-muted">프로젝트가 등록되면 이곳에 표시됩니다.</p>
-    </div>
+    <>
+      <p className="mb-12 inline-block border border-line-dark px-3 py-2.5 font-mono text-[0.58rem] text-muted-dark sm:-mt-12 sm:ml-[25%]">
+        PORTFOLIO PLACEHOLDERS — 실제 프로젝트 콘텐츠로 교체 예정
+      </p>
+      <div className={grid}>
+        {sampleProjects.map((p, i) => {
+          const v = cardVariants[i % cardVariants.length];
+          return (
+            <CardShell
+              key={p.title}
+              href="/#contact"
+              index={i}
+              title={p.title}
+              overview={p.overview}
+              tags={[p.category, "Sample"]}
+              aspect={v.aspect}
+              className={v.className}
+              media={<SampleMockup type={p.visual} />}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 }

@@ -28,8 +28,8 @@ export function FilteredProjects({ projects, categories }: { projects: ProjectCa
             aria-pressed={active === o.slug}
             onClick={() => setActive(o.slug)}
             className={cn(
-              "border px-4 py-2 text-sm transition-colors",
-              active === o.slug ? "border-ink bg-ink text-paper" : "border-ink/30 hover:border-ink",
+              "border px-4 py-2 text-[0.72rem] font-bold tracking-[0.06em] uppercase transition-colors",
+              active === o.slug ? "border-accent bg-accent text-ink" : "border-line-dark hover:border-paper",
             )}
           >
             {o.title} <span className="ml-1 font-mono text-xs opacity-60">{o.count}</span>

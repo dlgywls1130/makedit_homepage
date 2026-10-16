@@ -1,37 +1,47 @@
 import { getSiteSettings } from "@/sanity/content";
-import { Container, SectionLabel } from "../ui/primitives";
+import { Section, SectionIntro } from "../ui/primitives";
 import { ContactForm } from "./contact-form";
 
 export async function Contact() {
   const { email } = await getSiteSettings();
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="mt-24 border-t border-line py-24 md:mt-40 md:py-36">
-      <Container className="grid gap-14 md:grid-cols-12">
-        <div className="md:col-span-5">
-          <SectionLabel index="08">Contact</SectionLabel>
-          <h2 id="contact-title" className="mt-6 font-display text-display font-extrabold tracking-[-0.04em]">
-            Make it.
+    <Section id="contact" aria-labelledby="contact-title" className="bg-coal text-paper">
+      <SectionIntro
+        id="contact-title"
+        light
+        eyebrow="08 / Start a project"
+        title={
+          <>
+            HAVE A PROJECT
             <br />
-            <span className="text-muted">Or edit it.</span>
-          </h2>
-          <p className="mt-8 max-w-sm leading-relaxed text-muted">
-            프로젝트의 목적과 현재 상황을 알려주세요. 내용을 검토한 뒤 진행 방식과 다음 단계를 안내드립니다. 아직
-            정리되지 않은 아이디어라도 괜찮습니다.
+            IN <span className="text-accent">MIND?</span>
+          </>
+        }
+        copy="Tell us what you are building, improving, or trying to solve."
+      />
+      <div className="grid gap-[8vw] border-t border-[#45443f] pt-12 desk:grid-cols-[1fr_2fr]">
+        <div className="grid sm:grid-cols-2 desk:block">
+          <p className="max-w-[22rem] text-[0.86rem] leading-[1.8] text-[#aaa8a2]">
+            새로 만드는 프로젝트도, 이미 운영 중인 서비스를 개선하는 일도 좋습니다. 현재 상황과 필요한 도움을 알려주세요.
           </p>
-          {email && (
-            <p className="mt-8 text-sm">
-              <span className="mr-3 font-mono text-xs tracking-[0.14em] text-muted uppercase">Email</span>
-              <a href={`mailto:${email}`} className="font-semibold underline underline-offset-4 hover:text-accent">
-                {email}
-              </a>
-            </p>
-          )}
+          <dl className="mt-8 sm:mt-0 desk:mt-20">
+            <dt className="mb-2.5 text-[0.52rem] tracking-[0.13em] text-muted-dark">GENERAL INQUIRIES</dt>
+            <dd className="mb-8 text-[0.72rem]">
+              {email ? (
+                <a href={`mailto:${email}`} className="hover:text-accent">
+                  {email}
+                </a>
+              ) : (
+                <span className="text-muted-dark">이메일 등록 예정</span>
+              )}
+            </dd>
+            <dt className="mb-2.5 text-[0.52rem] tracking-[0.13em] text-muted-dark">RESPONSE</dt>
+            <dd className="text-[0.72rem]">연락 가능한 정보와 함께 회신드릴게요.</dd>
+          </dl>
         </div>
-        <div className="relative md:col-span-7">
-          <ContactForm fallbackEmail={email} />
-        </div>
-      </Container>
-    </section>
+        <ContactForm fallbackEmail={email} />
+      </div>
+    </Section>
   );
 }

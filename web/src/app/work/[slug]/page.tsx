@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Arrow, ButtonLink, Container, SectionLabel } from "@/components/ui/primitives";
+import { Arrow, ButtonLink, cn, eyebrowClass, gutter } from "@/components/ui/primitives";
 import { SanityImage } from "@/components/ui/sanity-image";
 import { RichText } from "@/components/work/rich-text";
 import { getProject, getProjectSlugs } from "@/sanity/content";
@@ -61,138 +61,143 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
 
   return (
     <article>
-      <Container className="pt-12 md:pt-20">
-        <Link href="/work" className="group inline-flex items-center gap-2 font-mono text-xs tracking-[0.14em] text-muted uppercase hover:text-ink">
-          <span aria-hidden className="transition-transform group-hover:-translate-x-0.5">←</span> All work
+      <header className={cn("bg-ink pt-36 pb-16 text-paper sm:pt-44 sm:pb-24", gutter)}>
+        <Link href="/work" className="group inline-flex items-center gap-2 text-[0.62rem] font-bold tracking-[0.14em] text-muted-dark uppercase hover:text-paper">
+          <span aria-hidden className="transition-transform group-hover:-translate-x-0.5">←</span> All works
         </Link>
-
-        <header className="mt-10 grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-8">
-            <SectionLabel index={String(project.year ?? "")}>{project.category?.title ?? "Project"}</SectionLabel>
-            <h1 className="mt-6 font-display text-display font-extrabold tracking-[-0.045em]">{project.title}</h1>
-            {project.excerpt && <p className="mt-8 max-w-2xl text-xl leading-relaxed md:text-2xl">{project.excerpt}</p>}
-          </div>
-          <dl className="self-end border-t border-ink text-sm md:col-span-4">
-            {meta.map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-4 border-b border-line py-3">
-                <dt className="font-mono text-xs tracking-[0.14em] text-muted uppercase">{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))}
-            {project.technologies?.length ? (
-              <div className="grid grid-cols-[6.5rem_1fr] gap-4 border-b border-line py-3">
-                <dt className="font-mono text-xs tracking-[0.14em] text-muted uppercase">Stack</dt>
-                <dd>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {project.technologies.map((t) => (
-                      <li key={t} className="border border-line px-2 py-0.5 font-mono text-xs">
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
-            ) : null}
-            {project.externalUrl && (
-              <div className="py-4">
-                <a
-                  href={project.externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-semibold hover:text-accent"
-                >
-                  사이트 방문 <Arrow />
-                  <span className="sr-only">(새 창)</span>
-                </a>
-              </div>
+        <div className="mt-12 grid gap-12 desk:grid-cols-[1fr_3fr]">
+          <p className={cn(eyebrowClass, "text-muted-dark")}>
+            {[project.category?.title, project.year].filter(Boolean).join(" / ") || "Project"}
+          </p>
+          <div>
+            <h1 className="text-[clamp(2.2rem,10.5vw,4rem)] leading-[0.88] font-extrabold tracking-[-0.075em] sm:text-section">
+              {project.title}
+            </h1>
+            {project.excerpt && (
+              <p className="mt-8 max-w-[40rem] text-[1rem] leading-[1.55] text-[#c4c1ba] sm:text-[1.15rem]">{project.excerpt}</p>
             )}
-          </dl>
-        </header>
-      </Container>
+          </div>
+        </div>
 
-      <Container className="mt-14 md:mt-20">
+        <dl className="mt-16 grid border-t border-line-dark text-[0.72rem] sm:grid-cols-2 desk:grid-cols-4">
+          {meta.map(([k, v]) => (
+            <div key={k} className="border-b border-line-dark py-4 sm:pr-6">
+              <dt className="mb-2 font-mono text-[0.58rem] tracking-[0.12em] text-muted-dark uppercase">{k}</dt>
+              <dd>{v}</dd>
+            </div>
+          ))}
+          {project.technologies?.length ? (
+            <div className="border-b border-line-dark py-4 sm:pr-6">
+              <dt className="mb-2 font-mono text-[0.58rem] tracking-[0.12em] text-muted-dark uppercase">Stack</dt>
+              <dd>
+                <ul className="flex flex-wrap gap-1.5">
+                  {project.technologies.map((t) => (
+                    <li key={t} className={cn("border px-2 py-0.5 font-mono text-[0.6rem]", t === "Kotlin" ? "border-accent text-accent" : "border-line-dark")}>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ) : null}
+        </dl>
+        {project.externalUrl && (
+          <a
+            href={project.externalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-8 inline-flex items-center gap-12 border-b pb-2.5 text-[0.75rem] font-bold tracking-[0.06em] uppercase"
+          >
+            Visit site <Arrow />
+            <span className="sr-only">(새 창)</span>
+          </a>
+        )}
+      </header>
+
+      <div className={cn("bg-ink pb-16 sm:pb-24", gutter)}>
         <SanityImage
           image={project.thumbnail}
           aspect={16 / 9}
-          sizes="(min-width: 1440px) 1360px, 100vw"
+          sizes="100vw"
           preload
           fallbackAlt={`${project.title} 대표 이미지`}
         />
-      </Container>
+      </div>
 
-      <Container className="mt-20 md:mt-32">
+      <div className={cn("py-24 sm:py-36", gutter)}>
         {storySections.map(({ key, label, ko }) =>
           project[key] ? (
-            <section key={key} className="grid gap-4 border-t border-line py-10 md:grid-cols-12 md:gap-10 md:py-14">
-              <h2 className="md:col-span-4">
-                <span className="block font-mono text-xs tracking-[0.14em] text-accent uppercase">{label}</span>
-                <span className="mt-2 block text-xl font-bold">{ko}</span>
+            <section key={key} className="grid gap-4 border-t border-ink py-10 desk:grid-cols-[1fr_3fr] desk:gap-0 desk:py-14">
+              <h2>
+                <span className="block font-mono text-[0.6rem] tracking-[0.12em] text-accent-dark uppercase">{label}</span>
+                <span className="mt-2 block text-[1.05rem] font-bold">{ko}</span>
               </h2>
-              <p className="text-lg leading-[1.85] whitespace-pre-line md:col-span-7 md:col-start-6">{project[key]}</p>
+              <p className="max-w-[44rem] text-[0.95rem] leading-[1.85] whitespace-pre-line text-[#3d3c39]">{project[key]}</p>
             </section>
           ) : null,
         )}
 
         {project.description?.length ? (
-          <section className="grid gap-4 border-t border-line py-10 md:grid-cols-12 md:gap-10 md:py-14">
-            <h2 className="md:col-span-4">
-              <span className="block font-mono text-xs tracking-[0.14em] text-accent uppercase">Details</span>
-              <span className="mt-2 block text-xl font-bold">프로젝트 상세</span>
+          <section className="grid gap-4 border-t border-ink py-10 desk:grid-cols-[1fr_3fr] desk:gap-0 desk:py-14">
+            <h2>
+              <span className="block font-mono text-[0.6rem] tracking-[0.12em] text-accent-dark uppercase">Details</span>
+              <span className="mt-2 block text-[1.05rem] font-bold">프로젝트 상세</span>
             </h2>
-            <div className="text-lg md:col-span-7 md:col-start-6">
+            <div className="max-w-[44rem] text-[0.95rem] text-[#3d3c39]">
               <RichText value={project.description} />
             </div>
           </section>
         ) : null}
-      </Container>
 
-      {gallery.length > 0 && (
-        <Container className="mt-16 md:mt-24">
-          <h2 className="sr-only">주요 화면</h2>
-          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
-            {gallery.map((img, i) => {
-              // Every third image spans full width to keep the rhythm editorial, not grid-like.
-              const wide = i % 3 === 0;
-              return (
-                <figure key={img._key ?? i} className={wide ? "md:col-span-2" : undefined}>
-                  <SanityImage
-                    image={img}
-                    aspect={wide ? 16 / 9 : 4 / 5}
-                    sizes={wide ? "(min-width: 1440px) 1360px, 100vw" : "(min-width: 768px) 50vw, 100vw"}
-                    fallbackAlt={`${project.title} 화면 ${i + 1}`}
-                  />
-                  {img.caption && <figcaption className="mt-3 font-mono text-xs text-muted">{img.caption}</figcaption>}
-                </figure>
-              );
-            })}
-          </div>
-        </Container>
-      )}
+        {gallery.length > 0 && (
+          <section className="mt-16 sm:mt-24">
+            <h2 className="sr-only">주요 화면</h2>
+            <div className="grid gap-4 sm:grid-cols-2 desk:gap-8">
+              {gallery.map((img, i) => {
+                // Every third image spans full width to keep the rhythm editorial, not grid-like.
+                const wide = i % 3 === 0;
+                return (
+                  <figure key={img._key ?? i} className={wide ? "sm:col-span-2" : undefined}>
+                    <SanityImage
+                      image={img}
+                      aspect={wide ? 16 / 9 : 4 / 5}
+                      sizes={wide ? "100vw" : "(min-width: 640px) 50vw, 100vw"}
+                      fallbackAlt={`${project.title} 화면 ${i + 1}`}
+                    />
+                    {img.caption && <figcaption className="mt-3 font-mono text-[0.6rem] text-muted">{img.caption}</figcaption>}
+                  </figure>
+                );
+              })}
+            </div>
+          </section>
+        )}
+      </div>
 
       {next && (
-        <Container className="mt-24 md:mt-40">
-          <Link href={`/work/${next.slug}`} className="group block border-y border-ink py-10 md:py-14">
-            <span className="font-mono text-xs tracking-[0.14em] text-muted uppercase">Next project</span>
-            <span className="mt-4 flex items-center justify-between gap-6 font-display text-display font-extrabold tracking-[-0.045em] transition-colors group-hover:text-accent">
-              {next.title}
-              <Arrow className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </span>
-          </Link>
-        </Container>
+        <Link href={`/work/${next.slug}`} className={cn("group block bg-sand py-16 sm:py-24", gutter)}>
+          <span className={cn(eyebrowClass, "text-muted")}>Next project</span>
+          <span className="mt-6 flex items-center justify-between gap-6 text-[clamp(2.4rem,6.5vw,7rem)] leading-[0.9] font-extrabold tracking-[-0.075em] transition-colors group-hover:text-accent-dark">
+            {next.title}
+            <Arrow />
+          </span>
+        </Link>
       )}
 
-      <Container className="py-24 md:py-32">
-        <div className="grid gap-8 md:grid-cols-12 md:items-end">
-          <p className="font-display text-title font-bold tracking-tight md:col-span-7">
-            비슷한 프로젝트를 계획하고 있다면,
+      <section className={cn("bg-accent py-24 sm:py-36", gutter)}>
+        <div className="grid items-end gap-12 desk:grid-cols-[1.6fr_1fr]">
+          <p className="text-[clamp(3rem,7vw,7rem)] leading-[0.85] font-extrabold tracking-[-0.08em]">
+            HAVE A SIMILAR
             <br />
-            <span className="text-muted">이야기를 나눠보세요.</span>
+            PROJECT <span className="text-paper">IN MIND?</span>
           </p>
-          <div className="md:col-span-5 md:text-right">
-            <ButtonLink href="/#contact">프로젝트 문의하기</ButtonLink>
+          <div>
+            <p className="mb-8 max-w-[30rem] text-[1.05rem] leading-[1.55]">비슷한 프로젝트를 계획하고 있다면 이야기를 나눠보세요.</p>
+            <ButtonLink href="/#contact" variant="dark">
+              프로젝트 문의하기
+            </ButtonLink>
           </div>
         </div>
-      </Container>
+      </section>
     </article>
   );
 }

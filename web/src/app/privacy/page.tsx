@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container, SectionLabel } from "@/components/ui/primitives";
+import { Container, PageTitle } from "@/components/ui/primitives";
 import { getSiteSettings } from "@/sanity/content";
 
 export const metadata: Metadata = {
@@ -18,11 +18,10 @@ export default async function PrivacyPage() {
   const company = s.companyName ?? "메이케딧(Makedit)";
 
   return (
-    <Container className="pt-12 pb-24 md:pt-20 md:pb-40">
-      <SectionLabel index="P">Privacy</SectionLabel>
-      <h1 className="mt-6 font-display text-display font-extrabold tracking-[-0.04em]">개인정보처리방침</h1>
+    <Container className="pt-36 pb-24 sm:pt-44 sm:pb-36">
+      <PageTitle eyebrow="Privacy" title="개인정보처리방침" />
 
-      <div className="mt-14 max-w-3xl space-y-12 leading-[1.85] [&_h2]:text-xl [&_h2]:font-bold [&_li]:mt-1 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5">
+      <div className="max-w-3xl desk:ml-[25%] space-y-12 leading-[1.85] [&_h2]:text-xl [&_h2]:font-bold [&_li]:mt-1 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5">
         <p>
           {company}(이하 &lsquo;회사&rsquo;)는 「개인정보 보호법」에 따라 정보주체의 개인정보를 보호하고 관련 고충을
           신속하게 처리하기 위해 다음과 같이 개인정보처리방침을 수립·공개합니다.

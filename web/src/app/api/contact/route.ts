@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         from: CONTACT_FROM_EMAIL,
         to: CONTACT_TO_EMAIL.split(",").map((s) => s.trim()),
         reply_to: input.email,
-        subject: `[Makedit 문의] ${input.projectType} — ${input.company} ${input.name}`,
+        subject: `[Makedit 문의] ${input.projectType} — ${[input.company, input.name].filter(Boolean).join(" ")}`,
         text: formatEmail(input),
       }),
     });
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
 function formatEmail(v: ContactInput) {
   return [
     `이름: ${v.name}`,
-    `회사명: ${v.company}`,
+    `회사명: ${v.company || "-"}`,
     `이메일: ${v.email}`,
     `프로젝트 유형: ${v.projectType}`,
     `예상 예산: ${v.budget || "-"}`,

@@ -1,54 +1,71 @@
 import { capabilities } from "@/lib/site";
-import { Container, SectionLabel, cn } from "../ui/primitives";
+import { Section, SectionIntro, cn } from "../ui/primitives";
 
 const columns = [
-  { key: "frontend", label: "Interface", sub: "Frontend", items: capabilities.frontend },
-  { key: "backend", label: "Infrastructure", sub: "Backend", items: capabilities.backend },
+  { key: "frontend", label: "01 / User-facing layer", title: "FRONTEND", items: capabilities.frontend, dark: false },
+  { key: "backend", label: "02 / Application layer", title: "BACKEND", items: capabilities.backend, dark: true },
 ] as const;
+
+function Column({ col }: { col: (typeof columns)[number] }) {
+  return (
+    <div className={cn("flex min-h-[27rem] flex-col p-8 sm:min-h-0", col.dark && "bg-ink text-paper")}>
+      <span className={cn("font-mono text-[0.58rem] uppercase", col.dark ? "text-muted-dark" : "text-muted")}>{col.label}</span>
+      <h3 className="mt-auto mb-8 text-[clamp(3rem,6vw,6rem)] font-bold tracking-[-0.07em]">{col.title}</h3>
+      <ul>
+        {col.items.map((item) => {
+          const kotlin = item === "Kotlin";
+          return (
+            <li
+              key={item}
+              className={cn(
+                "flex justify-between border-t py-3 after:text-[0.45rem] after:content-['●']",
+                col.dark ? "border-line-dark" : "border-line",
+                kotlin ? "text-base font-extrabold text-accent after:text-accent" : "text-[0.72rem] after:text-[#aaa]",
+              )}
+            >
+              {item}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 
 export function Infrastructure() {
   return (
-    <section aria-labelledby="infra-title" className="mt-24 bg-ink py-24 text-paper md:mt-40 md:py-36">
-      <Container>
-        <SectionLabel index="04" dark>
-          Capability
-        </SectionLabel>
-        <h2 id="infra-title" className="mt-6 max-w-5xl font-display text-display font-extrabold tracking-[-0.04em] uppercase">
-          From interface
-          <br />
-          <span className="text-muted-dark">to</span> infrastructure.
-        </h2>
-        <p className="mt-8 max-w-xl leading-relaxed text-muted-dark">
-          사용자가 보는 화면부터 그 화면을 움직이는 API와 데이터까지. 메이케딧은 프론트엔드와 백엔드를 함께
-          다룰 수 있어, 화면과 서버 사이에서 생기는 문제를 한 팀 안에서 해결합니다.
-        </p>
-
-        <div className="mt-16 grid gap-px bg-line-dark md:mt-24 md:grid-cols-2">
-          {columns.map((col, ci) => (
-            <div key={col.key} className={cn("bg-ink py-8 md:py-10", ci === 0 ? "md:pr-12" : "md:pl-12")}>
-              <div className="flex items-baseline justify-between border-b border-line-dark pb-4">
-                <h3 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{col.label}</h3>
-                <span className="font-mono text-xs tracking-[0.14em] text-muted-dark uppercase">{col.sub}</span>
-              </div>
-              <ul className="mt-2">
-                {col.items.map((item) => (
-                  <li
-                    key={item}
-                    className="border-b border-line-dark py-4 text-lg md:text-xl"
-                  >
-                    <span className={item === "Kotlin" ? "font-bold text-accent" : ""}>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+    <Section aria-labelledby="infra-title" className="bg-paper">
+      <SectionIntro
+        id="infra-title"
+        eyebrow="04 / Capabilities"
+        title={
+          <>
+            FROM INTERFACE
+            <br />
+            TO <span className="text-accent">INFRASTRUCTURE.</span>
+          </>
+        }
+        copy="Good digital products need more than a good interface."
+      />
+      <div className="grid border border-ink sm:min-h-[34rem] sm:grid-cols-[1fr_0.55fr_1fr]">
+        <Column col={columns[0]} />
+        <div
+          aria-hidden
+          className="flex min-h-36 flex-row items-center justify-center gap-4 bg-accent p-4 font-mono text-[0.5rem] sm:min-h-0 sm:flex-col sm:gap-0"
+        >
+          <span>REQUEST</span>
+          <i className="h-px w-[18%] bg-ink sm:h-1/4 sm:w-px" />
+          <b className="py-4 font-sans text-[2rem]">↔</b>
+          <i className="h-px w-[18%] bg-ink sm:h-1/4 sm:w-px" />
+          <span>RESPONSE</span>
+          <small className="mt-12 hidden text-center sm:block">WORKING DIGITAL SYSTEM</small>
         </div>
-
-        <p className="mt-10 font-mono text-xs leading-relaxed text-muted-dark">
-          * 기술은 프로젝트의 요구사항과 운영 환경에 맞춰 선택합니다. 모든 프로젝트에 위 기술을 일괄 적용하지는
-          않습니다.
-        </p>
-      </Container>
-    </section>
+        <Column col={columns[1]} />
+      </div>
+      <p className="mt-10 ml-auto max-w-[43rem] text-[0.9rem] leading-[1.8] text-muted">
+        사용자가 마주하는 인터페이스부터 애플리케이션 로직, API와 데이터 시스템까지 하나의 흐름으로 연결합니다. 기술은
+        각 프로젝트의 실제 범위와 요구사항에 맞게 선택합니다.
+      </p>
+    </Section>
   );
 }

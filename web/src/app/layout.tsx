@@ -1,17 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Inter, Noto_Sans_KR } from "next/font/google";
 import { draftMode } from "next/headers";
 import Link from "next/link";
 import { VisualEditing } from "next-sanity/visual-editing";
-import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { site, siteUrl } from "@/lib/site";
 
-// Latin display face for headlines; Korean falls back to self-hosted Pretendard (unicode-range subsets).
-const display = Inter_Tight({ subsets: ["latin"], weight: ["500", "700", "800"], variable: "--font-inter-tight" });
-const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400"], variable: "--font-jetbrains-mono" });
+// Fonts from the design: Inter for Latin, Noto Sans KR for Korean. Both are self-hosted by next/font.
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--font-inter" });
+const notoKr = Noto_Sans_KR({ weight: ["400", "500", "700"], variable: "--font-noto-kr", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -32,13 +31,13 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export const viewport: Viewport = { themeColor: "#f5f4f0" };
+export const viewport: Viewport = { themeColor: "#111111" };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const { isEnabled: isDraft } = await draftMode();
 
   return (
-    <html lang="ko" className={`${display.variable} ${mono.variable}`}>
+    <html lang="ko" className={`${inter.variable} ${notoKr.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <Header />
         <main id="main" className="flex-1">

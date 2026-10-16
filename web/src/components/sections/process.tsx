@@ -1,39 +1,34 @@
-import { processSteps } from "@/lib/site";
-import { Container, SectionLabel } from "../ui/primitives";
+import { pad, processSteps } from "@/lib/site";
+import { Section, SectionIntro } from "../ui/primitives";
 
 export function Process() {
   return (
-    <section id="process" aria-labelledby="process-title" className="mt-24 md:mt-40">
-      <Container>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <SectionLabel index="06">Process</SectionLabel>
-            <h2 id="process-title" className="mt-6 font-display text-display font-extrabold tracking-[-0.04em]">
-              Five steps.
-            </h2>
-          </div>
-          <p className="max-w-sm text-muted">
-            단계마다 결과물을 함께 확인하고 다음 단계로 넘어갑니다. 프로젝트 규모에 따라 단계는 압축되거나 반복됩니다.
-          </p>
-        </div>
-
-        <ol className="mt-14 grid border-t border-ink md:mt-20 md:grid-cols-5">
-          {processSteps.map((step, i) => (
-            <li
-              key={step.title}
-              className="group relative border-b border-line py-8 md:border-b-0 md:border-l md:px-6 md:py-10 md:first:border-l-0 md:first:pl-0"
-            >
-              <span
-                aria-hidden
-                className="absolute -top-px left-0 h-0.5 w-0 bg-accent transition-[width] duration-500 group-hover:w-full"
-              />
-              <span className="font-mono text-sm text-muted">Step {String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-6 font-display text-2xl font-bold tracking-tight md:mt-16 lg:text-3xl">{step.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{step.body}</p>
-            </li>
-          ))}
-        </ol>
-      </Container>
-    </section>
+    <Section id="process" aria-labelledby="process-title" className="bg-ink text-paper">
+      <SectionIntro
+        id="process-title"
+        light
+        eyebrow="06 / Process"
+        title={
+          <>
+            FROM FIRST CONVERSATION
+            <br />
+            TO LAUNCH.
+          </>
+        }
+      />
+      <ol className="grid border-t border-[#4b4944] sm:grid-cols-2 desk:grid-cols-5">
+        {processSteps.map((step, i) => (
+          <li
+            key={step.title}
+            className="relative border-b border-[#4b4944] py-8 before:absolute before:-top-[0.28rem] before:left-0 before:size-[0.55rem] before:rounded-full before:bg-accent sm:min-h-64 sm:py-6 sm:pr-5 desk:min-h-[22rem]"
+          >
+            <span className="font-mono text-[0.6rem] text-accent">{pad(i + 1)}</span>
+            <h3 className="mt-12 mb-4 text-[1.6rem] font-bold tracking-[-0.04em] sm:mt-24">{step.title}</h3>
+            <p className="pr-6 text-[0.72rem] leading-[1.7] text-muted-dark">{step.body}</p>
+            <i aria-hidden className="mt-8 block h-px w-8 bg-[#66645f]" />
+          </li>
+        ))}
+      </ol>
+    </Section>
   );
 }

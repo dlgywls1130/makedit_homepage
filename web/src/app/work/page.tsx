@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Container, SectionLabel } from "@/components/ui/primitives";
+import { PageTitle, gutter, cn } from "@/components/ui/primitives";
 import { FilteredProjects } from "@/components/work/filtered-projects";
-import { EmptyProjects, ProjectGrid } from "@/components/work/project-grid";
+import { ProjectGrid, SampleProjectGrid } from "@/components/work/project-grid";
 import { getAllProjects } from "@/sanity/content";
 import type { Category } from "@/sanity/types";
 
@@ -17,29 +17,26 @@ const FILTER_THRESHOLD = 6;
 
 export default async function WorkPage() {
   const projects = await getAllProjects();
-
-  const categories = [...new Map(projects.flatMap((p) => (p.category ? [[p.category.slug, p.category]] : [])) as [string, Category][]).values()];
+  const categories = [
+    ...new Map(projects.flatMap((p) => (p.category ? [[p.category.slug, p.category]] : [])) as [string, Category][]).values(),
+  ];
   const showFilter = projects.length >= FILTER_THRESHOLD && categories.length > 1;
 
   return (
-    <Container className="pt-12 pb-24 md:pt-20 md:pb-40">
-      <SectionLabel index="W">Work</SectionLabel>
-      <div className="mt-8 flex flex-wrap items-end justify-between gap-6 border-b border-ink pb-10">
-        <h1 className="font-display text-hero font-extrabold tracking-[-0.05em] uppercase">
-          Work{projects.length > 0 && <sup className="ml-3 align-top font-mono text-lg text-accent">({projects.length})</sup>}
-        </h1>
-        <p className="max-w-sm text-muted">새로 만든 서비스와 더 낫게 고친 서비스. 공개 가능한 프로젝트를 소개합니다.</p>
-      </div>
-
-      <div className="mt-14 md:mt-20">
-        {projects.length === 0 ? (
-          <EmptyProjects />
-        ) : showFilter ? (
-          <FilteredProjects projects={projects} categories={categories} />
-        ) : (
-          <ProjectGrid projects={projects} />
-        )}
-      </div>
-    </Container>
+    <div className={cn("min-h-svh bg-ink pt-36 pb-24 text-paper sm:pt-44 sm:pb-36", gutter)}>
+      <PageTitle
+        light
+        eyebrow={`Work${projects.length ? ` / ${projects.length}` : ""}`}
+        title="ALL WORKS."
+        copy="Digital products, business systems, and experiences built to solve real problems."
+      />
+      {projects.length === 0 ? (
+        <SampleProjectGrid />
+      ) : showFilter ? (
+        <FilteredProjects projects={projects} categories={categories} />
+      ) : (
+        <ProjectGrid projects={projects} />
+      )}
+    </div>
   );
 }

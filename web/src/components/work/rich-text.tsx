@@ -5,7 +5,7 @@ import { SanityImage } from "../ui/sanity-image";
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => <p className="mt-5 leading-[1.85] first:mt-0">{children}</p>,
-    h2: ({ children }) => <h2 className="mt-14 font-display text-3xl font-bold tracking-tight first:mt-0">{children}</h2>,
+    h2: ({ children }) => <h2 className="mt-14 text-3xl font-bold tracking-tight first:mt-0">{children}</h2>,
     h3: ({ children }) => <h3 className="mt-10 text-xl font-bold tracking-tight first:mt-0">{children}</h3>,
     blockquote: ({ children }) => (
       <blockquote className="mt-8 border-l-2 border-accent pl-5 text-xl leading-relaxed font-medium">{children}</blockquote>

@@ -4,14 +4,31 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { nav } from "@/lib/site";
-import { Arrow, Container, cn } from "../ui/primitives";
+import { Arrow, cn, gutter } from "../ui/primitives";
+
+export function Wordmark({ className }: { className?: string }) {
+  return (
+    <span className={cn("text-[1.05rem] font-black tracking-[-0.07em]", className)}>
+      MAKE<span className="text-accent">EDIT</span>
+    </span>
+  );
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const menuId = useId();
+  // Only the home page starts with the dark hero behind a transparent header.
+  const solid = scrolled || pathname !== "/";
 
-  // Links close the menu themselves; Escape closes it too. Body scroll is locked while open.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -24,94 +41,76 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-sm">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 grid h-[4.5rem] grid-cols-[1fr_auto] items-center transition-[background-color,color,border-color] duration-300 desk:h-[5.25rem] desk:grid-cols-[1fr_auto_1fr]",
+        gutter,
+        solid && !open ? "border-b border-line bg-paper/95 text-ink backdrop-blur-md" : "border-b border-transparent text-paper",
+      )}
+    >
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
       >
         본문 바로가기
       </a>
-      <Container className="flex h-16 items-center justify-between">
-        <Link href="/" className="font-display text-lg font-extrabold tracking-[-0.04em]" aria-label="Makedit 홈">
-          MAKE<span className="text-muted">DIT</span>
-        </Link>
+      <Link href="/" aria-label="Makedit 홈" className="w-max">
+        <Wordmark />
+      </Link>
 
-        <nav aria-label="주요 메뉴" className="hidden md:block">
-          <ul className="flex items-center gap-8 text-sm font-medium">
-            {nav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "transition-colors hover:text-accent",
-                    pathname.startsWith("/work") && item.href === "/work" && "underline decoration-accent underline-offset-8",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <nav aria-label="주요 메뉴" className="hidden desk:flex desk:gap-9">
+        {nav.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="relative text-[0.7rem] font-bold tracking-[0.12em] uppercase after:absolute after:-bottom-2 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-accent after:transition-transform after:duration-250 hover:after:origin-left hover:after:scale-x-100"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
 
-        <Link
-          href="/#contact"
-          className="hidden h-10 items-center gap-2 bg-ink px-4 text-sm font-semibold text-paper transition-colors hover:bg-accent hover:text-ink md:inline-flex"
-        >
-          프로젝트 문의 <Arrow />
-        </Link>
+      <Link
+        href="/#contact"
+        className="group hidden items-center gap-4 justify-self-end text-[0.72rem] font-bold tracking-[0.05em] desk:flex"
+      >
+        프로젝트 문의 <Arrow />
+      </Link>
 
-        <button
-          type="button"
-          className="-mr-2 grid size-10 place-items-center md:hidden"
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span aria-hidden className="relative block h-3 w-6">
-            <span
-              className={cn(
-                "absolute left-0 h-px w-6 bg-ink transition-transform duration-300",
-                open ? "top-1.5 rotate-45" : "top-0",
-              )}
-            />
-            <span
-              className={cn(
-                "absolute left-0 h-px w-6 bg-ink transition-transform duration-300",
-                open ? "top-1.5 -rotate-45" : "top-3",
-              )}
-            />
-          </span>
-        </button>
-      </Container>
+      <button
+        type="button"
+        className="flex size-10 flex-col justify-center gap-1.5 p-2 desk:hidden"
+        aria-expanded={open}
+        aria-controls={menuId}
+        aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span aria-hidden className={cn("h-px w-full bg-current transition-transform", open && "translate-y-[3.5px] rotate-45")} />
+        <span aria-hidden className={cn("h-px w-full bg-current transition-transform", open && "-translate-y-[3.5px] -rotate-45")} />
+      </button>
 
       <div
         id={menuId}
-        hidden={!open}
-        className="fixed inset-x-0 top-16 bottom-0 overflow-y-auto bg-paper md:hidden"
+        className={cn(
+          "fixed inset-x-0 top-[4.5rem] bottom-0 flex flex-col justify-between bg-ink py-12 text-paper transition-opacity duration-250 desk:hidden",
+          gutter,
+          open ? "visible opacity-100" : "pointer-events-none invisible opacity-0",
+        )}
       >
-        <Container className="flex h-full flex-col py-8">
-          <nav aria-label="모바일 메뉴">
-            <ul className="divide-y divide-line border-y border-line">
-              {nav.map((item, i) => (
-                <li key={item.href}>
-                  <Link href={item.href} onClick={() => setOpen(false)} className="flex items-baseline gap-4 py-5">
-                    <span className="font-mono text-xs text-accent">0{i + 1}</span>
-                    <span className="font-display text-4xl font-bold tracking-tight">{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <Link
-            href="/#contact"
-            onClick={() => setOpen(false)}
-            className="mt-auto flex h-14 items-center justify-between bg-ink px-5 font-semibold text-paper"
-          >
-            프로젝트 문의하기 <Arrow />
-          </Link>
-        </Container>
+        <nav aria-label="모바일 메뉴" className="flex flex-col">
+          {nav.map((item, i) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="border-b border-line-dark py-2.5 text-[clamp(2.5rem,9vw,5rem)] font-bold tracking-[-0.06em] uppercase"
+            >
+              <small className="inline-block w-8 align-middle font-mono text-[0.55rem] tracking-normal text-accent">0{i + 1}</small>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <p className="text-[0.7rem] leading-normal text-muted-dark">Web & application development partner</p>
       </div>
     </header>
   );

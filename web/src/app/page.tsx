@@ -10,14 +10,14 @@ import { Why } from "@/components/sections/why";
 import { getHomeProjects } from "@/sanity/content";
 
 export default async function HomePage() {
-  const { projects, total } = await getHomeProjects();
+  const { projects } = await getHomeProjects();
 
   return (
     <>
-      <Hero projects={projects} />
+      <Hero />
       <MakeEdit />
       <Services />
-      <SelectedWorks projects={projects} total={total} />
+      <SelectedWorks projects={projects} />
       <Infrastructure />
       <Why />
       <Process />
