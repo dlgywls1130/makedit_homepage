@@ -7,4 +7,5 @@ export default defineCliConfig({
   },
   // Hosted at https://<studioHost>.sanity.studio after `npm run deploy` (free).
   studioHost: process.env.SANITY_STUDIO_HOST || "makedit",
+  deployment: { appId: "msk07oaf9sg3y01e3u4tqbsz" },
 });
